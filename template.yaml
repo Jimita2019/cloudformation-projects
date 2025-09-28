@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: A sample CloudFormation template with YAML comments.
+
+Resources:
+   myInstance:
+     Type: 'AWS::EC2::Instance'
+     Properties: 
+        ImageId: ami-08982f1c5bf93d976
+        InstanceType: t2.micro
+        KeyName: EC2_2_KEY
+        SubnetId: subnet-0019ce3706642aecb
+        SecurityGroupIds:
+          - sg-07368e8b03821e368
+        UserData:
+          Fn::Base64: !Sub |
+            #!/bin/bash
+            yum update -y
+            yum install httpd -y
+            systemctl start httpd
+            systemctl enable httpd
+            echo ‘<html><body><h1 style=”color:Blue;”>Welcome to CloudSpace website launched using user data </h1></body></html>’ > /var/www/html/index.html
+    
+
+   myEIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref myInstance    
+      
+
+
+
